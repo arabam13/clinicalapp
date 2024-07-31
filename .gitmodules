@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = backend
+	url = https://github.com/arabam13/clinicalsapp-backend.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/arabam13/clinicalapp-frontend.git
