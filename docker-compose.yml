@@ -23,6 +23,15 @@ services:
       - spring-demo
     depends_on:
       - postgres
+  clinicalapp-frontend:
+    container_name: clinicalapp-frontend
+    image: clinicalapp/frontend:1.0.0
+    ports:
+      - 8080:80
+    networks:
+      - spring-demo
+    depends_on:
+      - clinicalapp-backend
 networks:
   spring-demo:
     driver: bridge
