@@ -16,22 +16,22 @@ services:
     restart: unless-stopped
   clinicalapp-backend:
     container_name: clinicalapp-backend
-    image: clinicalapp/backend:1.0.0
+    image: ${BACKEND_IMAGE_NAME}
     ports:
       - 8088:8088
     networks:
       - spring-demo
     depends_on:
       - postgres
-  clinicalapp-frontend:
-    container_name: clinicalapp-frontend
-    image: clinicalapp/frontend:1.0.0
-    ports:
-      - 8080:80
-    networks:
-      - spring-demo
-    depends_on:
-      - clinicalapp-backend
+  # clinicalapp-frontend:
+  #   container_name: clinicalapp-frontend
+  #   image: clinicalapp/frontend:1.0.0
+  #   ports:
+  #     - 8080:80
+  #   networks:
+  #     - spring-demo
+  #   depends_on:
+  #     - clinicalapp-backend
 networks:
   spring-demo:
     driver: bridge
