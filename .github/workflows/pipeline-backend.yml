@@ -15,7 +15,7 @@ on:
 
 jobs:
   compile:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     name: Compile Backend
     steps:
       - name: Checkout repository
@@ -33,7 +33,7 @@ jobs:
           ./mvnw clean compile -DskipTests
 
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     name: Build Backend
     needs: [compile]
     steps:
@@ -52,7 +52,7 @@ jobs:
           ./mvnw clean package -DskipTests
 
   build-image:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     name: Build Docker Image
     needs: [build]
     steps:
@@ -92,7 +92,7 @@ jobs:
             APP_VERSION=${{ steps.extract_version.outputs.VERSION }}
 
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     name: Deploy Backend
     needs: [build-image]
     steps:
