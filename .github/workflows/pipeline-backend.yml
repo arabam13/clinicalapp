@@ -71,10 +71,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
@@ -106,7 +102,6 @@ jobs:
         id: set_image_names
         run: |
           echo "BACKEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/clinicalapp-backend:${{ steps.extract_version.outputs.VERSION }}" >> $GITHUB_OUTPUT
-          # echo "FRONTEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/clinicalapp-frontend:${{ steps.extract_version.outputs.VERSION }}" >> $GITHUB_OUTPUT
 
   deploy:
     runs-on: ubuntu-latest
@@ -115,16 +110,35 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Exctract Project version
+        id: extract_version
+        run: |
+          cd backend
+          echo "VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout | sed 's/%//g')" >> $GITHUB_OUTPUT
+
+      - name: Set Docker Image Names
+        id: set_image_names
+        run: |
+          echo "BACKEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/clinicalapp-backend:${{ steps.extract_version.outputs.VERSION }}" >> $GITHUB_OUTPUT
+
       - name: Create SSH Key File
         run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > keyfile.ppm
+
       - name: Set Key Permissions
         run: chmod 600 keyfile.ppm
+
       - name: Check SSH Connection
         run: ssh -i keyfile.ppm -o StrictHostKeyChecking=no ec2-user@${{ secrets.VPS_IP }} "echo SSH connection successful"
+
       - name: Create Deployment Folder
         run: ssh -i keyfile.ppm -o StrictHostKeyChecking=no ec2-user@${{ secrets.VPS_IP }} "mkdir -p ci-cd"
+
       - name: Copy Docker Compose File
         run: scp -i keyfile.ppm docker-compose.yml ec2-user@${{ secrets.VPS_IP }}:ci-cd/docker-compose.yml
+
       - name: Set environment variables and deploy
         run: |
           ssh -i keyfile.ppm -o StrictHostKeyChecking=no ec2-user@${{ secrets.VPS_IP }} <<EOF
