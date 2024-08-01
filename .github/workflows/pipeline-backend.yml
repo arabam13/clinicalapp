@@ -15,7 +15,7 @@ on:
 
 jobs:
   compile:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     name: Compile Backend
     steps:
       - name: Checkout code
@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'amazon-corretto'
+          distribution: 'corretto'
       - name: Compile Project
         run: |
           cd backend
@@ -47,7 +47,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'amazon-corretto'
+          distribution: 'corretto'
       - name: Build Project
         run: |
           cd backend
@@ -66,7 +66,7 @@ jobs:
         uses: actions/setup-jdk@v2
         with:
           java-version: '17'
-          distribution: 'amazon-corretto'
+          distribution: 'corretto'
       - name: Build Project
         run: |
           cd backend
