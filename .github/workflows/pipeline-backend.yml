@@ -88,7 +88,7 @@ jobs:
         id: extract_version
         run: |
           cd backend
-          echo "VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout | sed 's/%//g')" >> $GITHUB_ENV
+          echo "VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout | sed 's/%//g')" >> $GITHUB_OUTPUT
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
@@ -98,14 +98,15 @@ jobs:
         run: |
           docker buildx create --use
           docker buildx build --platform linux/amd64 --push \
-            --tag ${{ secrets.DOCKER_USERNAME }}/clinicalapp-backend:${{ env.VERSION }} \
+            --tag ${{ secrets.DOCKER_USERNAME }}/clinicalapp-backend:${{ steps.extract_version.outputs.VERSION }} \
             --build-arg PROFILE=dev \
-            --build-arg APP_VERSION=${{ env.VERSION }} \
+            --build-arg APP_VERSION=${{ steps.extract_version.outputs.VERSION }} \
             -f infra/backend/Dockerfile backend
       - name: Set Docker Image Names
+        id: set_image_names
         run: |
-          echo "BACKEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/clinicalapp-backend:${{ env.VERSION }}" >> $GITHUB_ENV
-          # echo "FRONTEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/clinicalapp-frontend:${{ env.VERSION }}" >> $GITHUB_ENV
+          echo "BACKEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/clinicalapp-backend:${{ steps.extract_version.outputs.VERSION }}" >> $GITHUB_OUTPUT
+          # echo "FRONTEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/clinicalapp-frontend:${{ steps.extract_version.outputs.VERSION }}" >> $GITHUB_OUTPUT
 
   deploy:
     runs-on: ubuntu-latest
@@ -127,7 +128,7 @@ jobs:
       - name: Set environment variables and deploy
         run: |
           ssh -i keyfile.ppm -o StrictHostKeyChecking=no ec2-user@${{ secrets.VPS_IP }} <<EOF
-          export BACKEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/clinicalapp-backend:${{ env.VERSION }}
+          export BACKEND_IMAGE_NAME=${{ steps.set_image_names.outputs.BACKEND_IMAGE_NAME }}
           cd ci-cd
           docker-compose -f docker-compose.yml pull -q
           docker-compose -f docker-compose.yml up -d
