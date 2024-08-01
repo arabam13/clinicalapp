@@ -132,3 +132,6 @@ jobs:
           docker-compose -f docker-compose.yml pull -q
           docker-compose -f docker-compose.yml up -d
           EOF
+          env:
+        env:
+          BACKEND_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/clinicalapp-backend:${{ env.VERSION }}
