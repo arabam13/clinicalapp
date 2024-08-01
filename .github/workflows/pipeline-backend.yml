@@ -127,11 +127,9 @@ jobs:
       - name: Set environment variables and deploy
         run: |
           ssh -i keyfile.ppm -o StrictHostKeyChecking=no ec2-user@${{ secrets.VPS_IP }} <<EOF
-          export BACKEND_IMAGE_NAME=${{ env.BACKEND_IMAGE_NAME }}
+          export BACKEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/clinicalapp-backend:${{ env.VERSION }}
           cd ci-cd
           docker-compose -f docker-compose.yml pull -q
           docker-compose -f docker-compose.yml up -d
           EOF
           env:
-        env:
-          BACKEND_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/clinicalapp-backend:${{ env.VERSION }}
