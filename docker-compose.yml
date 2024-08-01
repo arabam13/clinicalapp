@@ -15,7 +15,7 @@ services:
       - spring-demo
     restart: unless-stopped
   clinicalapp-backend:
-    container_name: clinicalapp-backend
+    # container_name: clinicalapp-backend
     image: ${BACKEND_IMAGE_NAME}
     ports:
       - 8088:8088
