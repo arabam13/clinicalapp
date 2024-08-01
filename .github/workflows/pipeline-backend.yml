@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'corretto'
+          distribution: 'amazon-corretto'
       - name: Compile Project
         run: |
           cd backend
@@ -47,7 +47,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'corretto'
+          distribution: 'amazon-corretto'
       - name: Build Project
         run: |
           cd backend
@@ -66,7 +66,7 @@ jobs:
         uses: actions/setup-jdk@v2
         with:
           java-version: '17'
-          distribution: 'corretto'
+          distribution: 'amazon-corretto'
       - name: Build Project
         run: |
           cd backend
