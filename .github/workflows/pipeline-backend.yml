@@ -99,7 +99,7 @@ jobs:
           # echo "FRONTEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/clinicalapp-frontend:${{ env.VERSION }}" >> $GITHUB_ENV
 
   deploy:
-    runs-on: linux/amd64
+    runs-on: ubuntu-latest
     name: Deploy Backend
     needs: [build-image]
     steps:
