@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "backend/**"
+      - "frontend/**"
       - "infra/frontend/**"
       - "docker-compose.yml"
       - ".github/workflows/pipeline-frontend.yml"
