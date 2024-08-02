@@ -11,7 +11,6 @@ COPY . .
 # Ajouter des variables d'environnement dynamiques
 ARG API_URL
 ENV VITE_IMPORT_API_URL=${API_URL}
-# ENV VITE_IMPORT_API_URL=http://clinicalapp-backend:8088/api
 
 RUN pnpm run build
 
