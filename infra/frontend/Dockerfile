@@ -9,8 +9,9 @@ RUN pnpm install
 COPY . .
 
 # Ajouter des variables d'environnement dynamiques
-ARG VITE_IMPORT_API_URL
-ENV VITE_IMPORT_API_URL=${VITE_IMPORT_API_URL}
+ARG API_URL
+ENV VITE_IMPORT_API_URL=${API_URL}
+# ENV VITE_IMPORT_API_URL=http://clinicalapp-backend:8088/api
 
 RUN pnpm run build
 
